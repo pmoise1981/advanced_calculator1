@@ -12,10 +12,19 @@ This midterm project requires developing an advanced Python-based calculator app
 ✔ 95%+ Test Coverage: All critical functionalities are covered with pytest.
 ✔ GitHub Actions CI/CD: Runs tests automatically to ensure stability.
 
-🛠 Setup & Installation
-   python -m venv venv
-source venv/bin/activate # Mac/Linux venv\Scripts\activate # Windows pip install -r requirements.txt
 
-📥 1. Clone the Repository
-git clone https://github.com/YOUR_USERNAME/advanced-calculator.git
-cd advanced-calculator
+## Installation
+To install the necessary dependencies, run:
+
+```bash
+pip install -r requirements.txt
+
+# Usage
+Run the calculator using:
+python3 app/main.py
+
+To run the test suite:
+pytest --cov=app tests/
+
+Video
+https://drive.google.com/file/d/1GV9SIFVXowXs6gLiLPBNzC1waC5AUySP/view?usp=drive_link
