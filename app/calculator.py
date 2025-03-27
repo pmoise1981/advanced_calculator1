@@ -1,20 +1,18 @@
 class Calculator:
-    """Basic Calculator with error handling."""
+    def __init__(self, history=None):  # Provide default None
+        self.history = history
 
-    @staticmethod
-    def add(a: float, b: float) -> float:
+    def add(self, a, b):
         return a + b
 
-    @staticmethod
-    def subtract(a: float, b: float) -> float:
+    def subtract(self, a, b):
         return a - b
 
-    @staticmethod
-    def multiply(a: float, b: float) -> float:
+    def multiply(self, a, b):
         return a * b
 
-    @staticmethod
-    def divide(a: float, b: float) -> float:
+    def divide(self, a, b):
         if b == 0:
             raise ValueError("Cannot divide by zero")
         return a / b
+

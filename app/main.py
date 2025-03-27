@@ -1,65 +1,81 @@
-import sys
+import logging
 from app.calculator import Calculator
 from app.history import History
-from app.logger import logger
 
-class REPL:
-    """Command-Line Interface for the calculator."""
+# Setup logging
+logging.basicConfig(level=logging.INFO)
 
-    def __init__(self):
-        self.history = History()
-        self.calculator = Calculator()
-        self.commands = {
-            "add": self.calculator.add,
-            "sub": self.calculator.subtract,
-            "mul": self.calculator.multiply,
-            "div": self.calculator.divide,
-            "history": self.show_history,
-            "clear": self.clear_history,
-            "exit": self.exit_repl
-        }
+# Initialize History and Calculator
+history = History("history.csv")
+calculator = Calculator()
 
-    def run(self):
-        print("Advanced Calculator - Type 'exit' to quit")
-        while True:
-            try:
-                user_input = input(">> ").strip().split()
-                if not user_input:
-                    continue
-                command = user_input[0].lower()
-                if command in self.commands:
-                    if command in ["history", "clear", "exit"]:
-                        self.commands[command]()
-                    else:
-                        self.process_command(command, user_input[1:])
-                else:
-                    print("Unknown command.")
-            except Exception as e:
-                logger.error(f"Error: {e}")
-
-    def process_command(self, command, args):
-        if len(args) != 2:
-            print("Error: Provide two numbers.")
-            return
+def get_float_input(prompt):
+    """Helper function to get a valid float input from the user."""
+    while True:
         try:
-            a, b = map(float, args)
-            result = self.commands[command](a, b)
-            print(f"Result: {result}")
-            self.history.add_entry(command, a, b, result)
+            return float(input(prompt))
         except ValueError:
-            print("Error: Invalid input.")
+            print("Invalid input. Please enter a valid number.")
 
-    def show_history(self):
-        print(self.history.history)
+def main():
+    """Main function for the calculator."""
+    print("Welcome to the Advanced Calculator")
+    while True:
+        try:
+            print("\n1. Add\n2. Subtract\n3. Multiply\n4. Divide\n5. History\n6. Exit")
+            choice = input("Please select an option: ")
 
-    def clear_history(self):
-        self.history.clear_history()
-        print("History cleared.")
+            if choice == "1":
+                x = get_float_input("Enter first number: ")
+                y = get_float_input("Enter second number: ")
+                result = calculator.add(x, y)
+                print(f"Result: {result}")
+                history.add_entry("add", x, y, result)
 
-    def exit_repl(self):
-        print("Exiting calculator.")
-        sys.exit()
+            elif choice == "2":
+                x = get_float_input("Enter first number: ")
+                y = get_float_input("Enter second number: ")
+                result = calculator.subtract(x, y)
+                print(f"Result: {result}")
+                history.add_entry("subtract", x, y, result)
+
+            elif choice == "3":
+                x = get_float_input("Enter first number: ")
+                y = get_float_input("Enter second number: ")
+                result = calculator.multiply(x, y)
+                print(f"Result: {result}")
+                history.add_entry("multiply", x, y, result)
+
+            elif choice == "4":
+                x = get_float_input("Enter first number: ")
+                y = get_float_input("Enter second number: ")
+                try:
+                    result = calculator.divide(x, y)
+                    print(f"Result: {result}")
+                    history.add_entry("divide", x, y, result)
+                except ValueError as e:
+                    print(f"Error: {e}")
+
+            elif choice == "5":
+                history_data = history.view_history()
+                if history_data.empty:
+                    print("No history found.")
+                else:
+                    print("History:")
+                    print(history_data)
+
+            elif choice == "6":
+                print("User exited the calculator.")
+                logging.info("User exited the calculator.")
+                break  # Break out of the REPL loop
+
+            else:
+                print("Invalid choice. Please try again.")  # Handles invalid menu choice
+
+        except Exception as e:
+            print(f"An unexpected error occurred: {e}")
+            logging.exception("An unexpected error occurred.")  # Log the actual exception
 
 if __name__ == "__main__":
-    REPL().run()
+    main()
 
